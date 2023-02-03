@@ -45,7 +45,7 @@ contract Exchange is ERC20 {
     // ETH -> ERC20
     function ethToTokenSwap(uint256 _minTokens) public payable {
         // calculate amount out (zero fee)
-        uint256 outputAmount = getOutputAmount(
+        uint256 outputAmount = getOutputAmountWithFee(
             msg.value,
             address(this).balance - msg.value,
             token.balanceOf(address(this))
@@ -84,6 +84,17 @@ contract Exchange is ERC20 {
     ) public pure returns (uint256) {
         uint256 numerator = outputReserve * inputAmount;
         uint256 denominator = inputReserve + inputAmount;
+        return numerator / denominator;
+    }
+
+    function getOutputAmountWithFee(
+        uint256 inputAmount,
+        uint256 inputReserve,
+        uint256 outputReserve
+    ) public pure returns (uint256) {
+        uint256 inputAmountWithFee = inputAmount * 99;
+        uint256 numerator = outputReserve * inputAmountWithFee;
+        uint256 denominator = inputReserve * 100 + inputAmountWithFee;
         return numerator / denominator;
     }
 }

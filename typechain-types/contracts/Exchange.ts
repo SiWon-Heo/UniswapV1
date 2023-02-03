@@ -36,13 +36,15 @@ export interface ExchangeInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "ethToTokenSwap()": FunctionFragment;
+    "ethToTokenSwap(uint256)": FunctionFragment;
     "getOutputAmount(uint256,uint256,uint256)": FunctionFragment;
+    "getOutputAmountWithFee(uint256,uint256,uint256)": FunctionFragment;
     "getPrice(uint256,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "removeLiquidity(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
+    "tokenToEthSwap(uint256,uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -58,11 +60,13 @@ export interface ExchangeInterface extends utils.Interface {
       | "decreaseAllowance"
       | "ethToTokenSwap"
       | "getOutputAmount"
+      | "getOutputAmountWithFee"
       | "getPrice"
       | "increaseAllowance"
       | "name"
       | "removeLiquidity"
       | "symbol"
+      | "tokenToEthSwap"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
@@ -91,10 +95,18 @@ export interface ExchangeInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "ethToTokenSwap",
-    values?: undefined
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getOutputAmount",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getOutputAmountWithFee",
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -115,6 +127,10 @@ export interface ExchangeInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenToEthSwap",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -152,6 +168,10 @@ export interface ExchangeInterface extends utils.Interface {
     functionFragment: "getOutputAmount",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getOutputAmountWithFee",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
@@ -163,6 +183,10 @@ export interface ExchangeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenToEthSwap",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -264,10 +288,18 @@ export interface Exchange extends BaseContract {
     ): Promise<ContractTransaction>;
 
     ethToTokenSwap(
+      _minTokens: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     getOutputAmount(
+      inputAmount: PromiseOrValue<BigNumberish>,
+      inputReserve: PromiseOrValue<BigNumberish>,
+      outputReserve: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getOutputAmountWithFee(
       inputAmount: PromiseOrValue<BigNumberish>,
       inputReserve: PromiseOrValue<BigNumberish>,
       outputReserve: PromiseOrValue<BigNumberish>,
@@ -294,6 +326,12 @@ export interface Exchange extends BaseContract {
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenToEthSwap(
+      _tokenSold: PromiseOrValue<BigNumberish>,
+      _minEth: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -342,10 +380,18 @@ export interface Exchange extends BaseContract {
   ): Promise<ContractTransaction>;
 
   ethToTokenSwap(
+    _minTokens: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   getOutputAmount(
+    inputAmount: PromiseOrValue<BigNumberish>,
+    inputReserve: PromiseOrValue<BigNumberish>,
+    outputReserve: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getOutputAmountWithFee(
     inputAmount: PromiseOrValue<BigNumberish>,
     inputReserve: PromiseOrValue<BigNumberish>,
     outputReserve: PromiseOrValue<BigNumberish>,
@@ -372,6 +418,12 @@ export interface Exchange extends BaseContract {
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
+
+  tokenToEthSwap(
+    _tokenSold: PromiseOrValue<BigNumberish>,
+    _minEth: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -419,9 +471,19 @@ export interface Exchange extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    ethToTokenSwap(overrides?: CallOverrides): Promise<void>;
+    ethToTokenSwap(
+      _minTokens: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getOutputAmount(
+      inputAmount: PromiseOrValue<BigNumberish>,
+      inputReserve: PromiseOrValue<BigNumberish>,
+      outputReserve: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOutputAmountWithFee(
       inputAmount: PromiseOrValue<BigNumberish>,
       inputReserve: PromiseOrValue<BigNumberish>,
       outputReserve: PromiseOrValue<BigNumberish>,
@@ -448,6 +510,12 @@ export interface Exchange extends BaseContract {
     ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
+
+    tokenToEthSwap(
+      _tokenSold: PromiseOrValue<BigNumberish>,
+      _minEth: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -521,10 +589,18 @@ export interface Exchange extends BaseContract {
     ): Promise<BigNumber>;
 
     ethToTokenSwap(
+      _minTokens: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getOutputAmount(
+      inputAmount: PromiseOrValue<BigNumberish>,
+      inputReserve: PromiseOrValue<BigNumberish>,
+      outputReserve: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOutputAmountWithFee(
       inputAmount: PromiseOrValue<BigNumberish>,
       inputReserve: PromiseOrValue<BigNumberish>,
       outputReserve: PromiseOrValue<BigNumberish>,
@@ -551,6 +627,12 @@ export interface Exchange extends BaseContract {
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenToEthSwap(
+      _tokenSold: PromiseOrValue<BigNumberish>,
+      _minEth: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -600,10 +682,18 @@ export interface Exchange extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     ethToTokenSwap(
+      _minTokens: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getOutputAmount(
+      inputAmount: PromiseOrValue<BigNumberish>,
+      inputReserve: PromiseOrValue<BigNumberish>,
+      outputReserve: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getOutputAmountWithFee(
       inputAmount: PromiseOrValue<BigNumberish>,
       inputReserve: PromiseOrValue<BigNumberish>,
       outputReserve: PromiseOrValue<BigNumberish>,
@@ -630,6 +720,12 @@ export interface Exchange extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenToEthSwap(
+      _tokenSold: PromiseOrValue<BigNumberish>,
+      _minEth: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
