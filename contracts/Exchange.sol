@@ -42,10 +42,29 @@ contract Exchange is ERC20 {
         token.transfer(msg.sender, tokenAmount);
     }
 
-    function ethToTokenSwap() public payable {
-        uint256 inputAmount = msg.value;
-        uint256 outputAmount = inputAmount;
+    // ETH -> ERC20
+    function ethToTokenSwap(uint256 _minTokens) public payable {
+        // calculate amount out (zero fee)
+        uint256 outputAmount = getOutputAmount(
+            msg.value,
+            address(this).balance - msg.value,
+            token.balanceOf(address(this))
+        );
+        require(outputAmount >= _minTokens, "Insufficient output Amount");
+        // transfer token out
         IERC20(token).transfer(msg.sender, outputAmount);
+    }
+
+    // ERC20 -> ETH
+    function tokenToEthSwap(uint256 _tokenSold, uint256 _minEth) public {
+        uint256 outputAmount = getOutputAmount(
+            _tokenSold,
+            token.balanceOf(address(this)),
+            address(this).balance
+        );
+        require(outputAmount >= _minEth, "Insufficient output Amount");
+        IERC20(token).transferFrom(msg.sender, address(this), _tokenSold);
+        payable(msg.sender).transfer(outputAmount);
     }
 
     function getPrice(uint256 inputReserve, uint256 outputReserve)
