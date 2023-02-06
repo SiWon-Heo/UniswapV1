@@ -7,9 +7,16 @@ import "./Exchange.sol";
 contract Factory {
     mapping(address => address) tokenToExchange;
 
+    event NewExchange(address indexed token, address indexed exchange);
+
     function createExchange(address _token) public returns (address) {
+        require(_token != address(0));
+        require(tokenToExchange[_token] == address(0));
+
         Exchange exchange = new Exchange(_token);
         tokenToExchange[_token] = address(exchange);
+
+        emit NewExchange(_token, address(exchange));
         return address(exchange);
     }
 

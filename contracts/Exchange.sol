@@ -10,6 +10,28 @@ contract Exchange is ERC20 {
     IERC20 token;
     IFactory factory;
 
+    // 로그 찍기
+    event TokenPurchase(
+        address indexed buyer,
+        uint256 indexed ethSold,
+        uint256 indexed tokensBought
+    );
+    event EthPurchase(
+        address indexed buyer,
+        uint256 indexed ethSold,
+        uint256 indexed tokensBought
+    );
+    event AddLiquidity(
+        address indexed provider,
+        uint256 indexed ethAmount,
+        uint256 indexed tokenAmount
+    );
+    event RemoveLiquidity(
+        address indexed provider,
+        uint256 indexed ethAmount,
+        uint256 indexed tokenAmount
+    );
+
     constructor(address _token) ERC20("Gray Uniswap V2", "GUNI-V2") {
         token = IERC20(_token);
         factory = IFactory(msg.sender);
@@ -35,6 +57,7 @@ contract Exchange is ERC20 {
     }
 
     function removeLiquidity(uint256 _lpTokenAmount) public {
+        require(_lpTokenAmount > 0);
         uint256 totalLiquidity = totalSupply();
         uint256 ethAmount = (_lpTokenAmount * address(this).balance) /
             totalLiquidity;
@@ -75,6 +98,7 @@ contract Exchange is ERC20 {
             token.balanceOf(address(this))
         );
         require(outputAmount >= _minTokens, "Insufficient output Amount");
+        emit TokenPurchase(_recipient, msg.value, outputAmount);
         // transfer token out
         IERC20(token).transfer(_recipient, outputAmount);
     }
