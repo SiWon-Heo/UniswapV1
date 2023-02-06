@@ -257,8 +257,8 @@
       ]
     },
     "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/contracts/Exchange.sol": {
-      "lastModificationDate": 1675671374932,
-      "contentHash": "eedc7737569f42fed36d0c9acdb74133",
+      "lastModificationDate": 1675674605331,
+      "contentHash": "d1c79d590c25a30a963cca247c24ae2c",
       "sourceName": "contracts/Exchange.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -286,7 +286,8 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "./interfaces/IFactory.sol"
+        "./interfaces/IFactory.sol",
+        "./interfaces/IExchange.sol"
       ],
       "versionPragmas": [
         "^0.8.9"
@@ -584,6 +585,41 @@
       ],
       "artifacts": [
         "IFactory"
+      ]
+    },
+    "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/contracts/interfaces/IExchange.sol": {
+      "lastModificationDate": 1675674558682,
+      "contentHash": "d09d80b0a05d53692965cc238506eb4d",
+      "sourceName": "contracts/interfaces/IExchange.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "IExchange"
       ]
     }
   }

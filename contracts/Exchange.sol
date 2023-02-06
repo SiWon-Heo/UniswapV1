@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./interfaces/IFactory.sol";
+import "./interfaces/IExchange.sol";
 
 contract Exchange is ERC20 {
     IERC20 token;
@@ -47,6 +48,26 @@ contract Exchange is ERC20 {
 
     // ETH -> ERC20
     function ethToTokenSwap(uint256 _minTokens) public payable {
+        // // calculate amount out (zero fee)
+        // uint256 outputAmount = getOutputAmountWithFee(
+        //     msg.value,
+        //     address(this).balance - msg.value,
+        //     token.balanceOf(address(this))
+        // );
+        // require(outputAmount >= _minTokens, "Insufficient output Amount");
+        // // transfer token out
+        // IERC20(token).transfer(msg.sender, outputAmount);
+        ethToToken(_minTokens, msg.sender);
+    }
+
+    function ethToTokenTransfer(uint256 _minTokens, address _recipient)
+        public
+        payable
+    {
+        ethToToken(_minTokens, _recipient);
+    }
+
+    function ethToToken(uint256 _minTokens, address _recipient) private {
         // calculate amount out (zero fee)
         uint256 outputAmount = getOutputAmountWithFee(
             msg.value,
@@ -55,7 +76,7 @@ contract Exchange is ERC20 {
         );
         require(outputAmount >= _minTokens, "Insufficient output Amount");
         // transfer token out
-        IERC20(token).transfer(msg.sender, outputAmount);
+        IERC20(token).transfer(_recipient, outputAmount);
     }
 
     // ERC20 -> ETH
@@ -68,6 +89,32 @@ contract Exchange is ERC20 {
         require(outputAmount >= _minEth, "Insufficient output Amount");
         IERC20(token).transferFrom(msg.sender, address(this), _tokenSold);
         payable(msg.sender).transfer(outputAmount);
+    }
+
+    function tokenToTokenSwap(
+        uint256 _tokenSold,
+        uint256 _minTokenBought,
+        uint256 _minEthBought,
+        address _tokenAddress
+    ) public {
+        address toTokenExchangeAddress = factory.getExchange(_tokenAddress);
+        // ERC20 -> ETH
+        // calculate amount out(zero fee)
+        uint256 ethOutputAmount = getOutputAmountWithFee(
+            _tokenSold,
+            token.balanceOf(address(this)),
+            address(this).balance
+        );
+        require(ethOutputAmount >= _minEthBought, "Insufficient output Amount");
+
+        // transfer token out
+        IERC20(token).transferFrom(msg.sender, address(this), _tokenSold);
+
+        // 새로운 인터페이스 필요
+        // ETH -> ERC20
+        IExchange(toTokenExchangeAddress).ethToTokenTransfer{
+            value: ethOutputAmount
+        }(_minTokenBought, msg.sender);
     }
 
     function getPrice(uint256 inputReserve, uint256 outputReserve)

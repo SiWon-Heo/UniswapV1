@@ -16,6 +16,8 @@ export type { Exchange } from "./contracts/Exchange";
 export { Exchange__factory } from "./factories/contracts/Exchange__factory";
 export type { Factory } from "./contracts/Factory";
 export { Factory__factory } from "./factories/contracts/Factory__factory";
+export type { IExchange } from "./contracts/interfaces/IExchange";
+export { IExchange__factory } from "./factories/contracts/interfaces/IExchange__factory";
 export type { IFactory } from "./contracts/interfaces/IFactory";
 export { IFactory__factory } from "./factories/contracts/interfaces/IFactory__factory";
 export type { Token } from "./contracts/Token";
