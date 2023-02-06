@@ -257,8 +257,8 @@
       ]
     },
     "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/contracts/Exchange.sol": {
-      "lastModificationDate": 1675405010214,
-      "contentHash": "a483319476592b39509f4d84476076fc",
+      "lastModificationDate": 1675671374932,
+      "contentHash": "eedc7737569f42fed36d0c9acdb74133",
       "sourceName": "contracts/Exchange.sol",
       "solcConfig": {
         "version": "0.8.9",
@@ -285,7 +285,8 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "./interfaces/IFactory.sol"
       ],
       "versionPragmas": [
         "^0.8.9"
@@ -475,6 +476,114 @@
       ],
       "artifacts": [
         "Token"
+      ]
+    },
+    "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/contracts/Factory.sol": {
+      "lastModificationDate": 1675671150103,
+      "contentHash": "d7b174bcd1635cc2d66498314cff8acf",
+      "sourceName": "contracts/Factory.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol",
+        "./Exchange.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "Factory"
+      ]
+    },
+    "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1675331010200,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/Users/calvin/Documents/skku/dev/Blockchain/UniswapV1/contracts/interfaces/IFactory.sol": {
+      "lastModificationDate": 1675671304578,
+      "contentHash": "987d08cb94e931816752f40bb306da53",
+      "sourceName": "contracts/interfaces/IFactory.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "IFactory"
       ]
     }
   }
